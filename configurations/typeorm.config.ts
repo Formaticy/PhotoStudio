@@ -1,16 +1,21 @@
-import { DataSource } from 'typeorm';
+import CONNECTION from "./db.connection"
+import { DataSource } from "typeorm"
 
-const ormConfig: DataSource = new DataSource({
-  type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  database: 'photoStudio',
-  username: 'postgres',
-  password: 'root',
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  logging: true,
-  synchronize: false,
-  migrationsTableName: 'migrations',
-  migrations: ['dist/src/migrations/*{.ts,.js}'],
-});
-export default ormConfig;
+// @ts-ignore
+const AppDataSource = new DataSource({
+    ...CONNECTION,
+    entities: ['dist/**/*.entity{.ts,.js}'],
+    migrations: ['src/migrations/*{.ts,.js}'],
+    logging: true,
+    synchronize: false
+})
+
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })
+
+export default AppDataSource;
