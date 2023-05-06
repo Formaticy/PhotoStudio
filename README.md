@@ -2,7 +2,17 @@
 <p>ЗАПУСК ПРИЛОЖЕНИЕ ОСУЩЕСТВЛЯЕТСЯ ПО АДРЕСУ http://localhost:3002/api </p>
 
 
-
+{
+    "place": "whiteBox",
+    "date": "2022-12-12",
+    "peopleAmount": 2,
+    "photographer": {
+      "id": 1
+    },
+    "client": {
+      "id": 1
+    }
+}
 
 
 

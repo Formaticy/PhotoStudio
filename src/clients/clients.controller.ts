@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { Client } from './client.entity';
 import { ClientsService } from './clients.service';
-import { CreateClientDto } from './dto/create_client.dto';
+import { CreateClientDto } from './dto/create-client.dto';
 import { IncompleteClientDto } from './dto/incomplete-client.dto';
 
 @Controller('clients')
@@ -18,8 +18,8 @@ export class ClientsController {
     return this.clientsService.findAllClients();
   }
 
-  @Get()
-  findAllIncomplete(): Promise<IncompleteClientDto[]> { // не работает, тк выше есть другой гет запрос
+  @Get('incomplete')
+  findAllIncomplete(): Promise<IncompleteClientDto[]> {
     return this.clientsService.findIncompleteClients();
   }
 

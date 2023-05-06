@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-// import { PhotosessionsModule } from './photosessions/photosessions.module';
-import { DatasourceModule } from './datasource/datasource.module';
-// import { PhotographersModule } from './photographers/photographers.module';
+import { PhotosessionsModule } from './photosessions/photosessions.module';
+import { PhotographersModule } from './photographers/photographers.module';
 import { ClientsModule } from './clients/clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import CONNECTION from '../configurations/db.connection';
 
 @Module({
-  imports: [DatasourceModule, ClientsModule, //PhotographersModule, PhotosessionsModule
+  imports: [ClientsModule, PhotographersModule, PhotosessionsModule,
     // @ts-ignore
     TypeOrmModule.forRoot({
       ...CONNECTION,
