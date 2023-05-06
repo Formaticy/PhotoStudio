@@ -1,33 +1,40 @@
 import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { Photographer } from './photographer.entity';
 import { PhotographersService } from './photographers.service';
+import { CreatePhotographerDto } from './dto/create-photographer.dto';
+import { IncompletePhotographerDto } from './dto/incomplete-photographer.dto';
 
 @Controller('photographers')
 export class PhotographersController {
   constructor(private readonly photographersService: PhotographersService) {}
 
   @Post()
-  create(@Body() createPhotographer: Photographer) {
-    return this.photographersService.create(createPhotographer);
+  create(@Body() createPhotographerDto: CreatePhotographerDto): Promise<Photographer> {
+    return this.photographersService.createPhotographer(createPhotographerDto);
   }
 
   @Get()
-  findAll() {
-    return this.photographersService.findAll();
+  findAll(): Promise<Photographer[]> {
+    return this.photographersService.findAllPhotographers();
+  }
+
+  @Get()
+  findAllIncomplete(): Promise<IncompletePhotographerDto[]> { // не работает, тк выше есть другой гет запрос
+    return this.photographersService.findIncompletePhotographers();
   }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.photographersService.findById(+id);
+  getPhotographerById(@Param('id') id: number): Promise<Photographer> {
+    return this.photographersService.getPhotographerById(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updatePhotographer: Photographer) {
-    return this.photographersService.update(+id, updatePhotographer);
+  updatePhotographer(@Param('id') id: number, @Body() updatePhotographer: Photographer): Promise<Photographer> {
+    return this.photographersService.updatePhotographer(id, updatePhotographer);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.photographersService.remove(+id);
+  deletePhotographer(@Param('id') id: number): Promise<void> {
+    return this.photographersService.deletePhotographer(id);
   }
 }
