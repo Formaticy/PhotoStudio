@@ -18,8 +18,8 @@ export class PhotographersController {
     return this.photographersService.findAllPhotographers();
   }
 
-  @Get()
-  findAllIncomplete(): Promise<IncompletePhotographerDto[]> { // не работает, тк выше есть другой гет запрос
+  @Get('incomplete')
+  findAllIncomplete(): Promise<IncompletePhotographerDto[]> { 
     return this.photographersService.findIncompletePhotographers();
   }
 
