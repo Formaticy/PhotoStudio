@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Client } from './client.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientRepository } from './client.repository';
 import { CreateClientDto } from './dto/create-client.dto';
 import { IncompleteClientDto } from './dto/incomplete-client.dto';
+import { ClientNotFoundException } from './exceptions/ClientNotFound.exception';
 
 @Injectable()
 export class ClientsService {
@@ -19,7 +20,7 @@ export class ClientsService {
       });
 
       if (! found) {
-        throw new NotFoundException(`Client with ID = ${id} not found`); 
+        throw new ClientNotFoundException(`Client with ID = ${id} not found`); 
       }
 
       return found;
@@ -31,7 +32,7 @@ export class ClientsService {
       })
 
       if (! clients) {
-        throw new NotFoundException(`Clients are not found`); 
+        throw new ClientNotFoundException(); 
       }
 
       return clients;
@@ -39,6 +40,9 @@ export class ClientsService {
 
     async findIncompleteClients(): Promise<IncompleteClientDto[]> {
       const clients = await this.clientRepository.find();
+      if (! clients) {
+        throw new ClientNotFoundException(); 
+      }
       const incompleteClientsDto: IncompleteClientDto[] = clients.map((client) => {
         const incompleteClientDto = new IncompleteClientDto();
         incompleteClientDto.firstname = client.firstname;
@@ -65,6 +69,9 @@ export class ClientsService {
 
     async updateClient(id: number, updatedClient: Client): Promise<Client> {
       const client = await this.getClientById(id);
+      if (! client) {
+        throw new ClientNotFoundException(); 
+      }
 
       client.firstname = updatedClient.firstname;
       client.lastname = updatedClient.lastname;
@@ -77,6 +84,10 @@ export class ClientsService {
     }
 
     async deleteClient(id: number): Promise<void> {
+      const client = await this.getClientById(id);
+      if (! client) {
+        throw new ClientNotFoundException(); 
+      }
       const result = await this.clientRepository.delete(id);
       console.log(result);
     }

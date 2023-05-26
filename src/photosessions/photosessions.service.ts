@@ -50,6 +50,9 @@ export class PhotosessionsService {
                 client: true
             }
         });
+        if (! photosessions) {
+          throw new NotFoundException(`Photosessions are not found`); 
+        }
         const incompletePhotosessionsDto: IncompletePhotosessionDto[] = photosessions.map((photosession) => {
           const incompletePhotosessionDto = new IncompletePhotosessionDto();
           incompletePhotosessionDto.place = photosession.place;
@@ -68,7 +71,9 @@ export class PhotosessionsService {
         photosession.place = createPhotosessionDto.place;
         photosession.date = createPhotosessionDto.date;
         photosession.peopleAmount = createPhotosessionDto.peopleAmount;
+        
         photosession.client = createPhotosessionDto.client;
+
         photosession.photographer = createPhotosessionDto.photographer;
   
         await this.photosessionRepository.save(photosession);
@@ -77,7 +82,9 @@ export class PhotosessionsService {
 
       async updatePhotosession(id: number, updatedPhotosession: Photosession): Promise<Photosession> {
         const photosession = await this.getPhotosessionById(id);
-  
+        if (! photosession) {
+          throw new NotFoundException(`Photosession is not found`); 
+        }
         photosession.place = updatedPhotosession.place;
         photosession.date = updatedPhotosession.date;
         photosession.peopleAmount = updatedPhotosession.peopleAmount;
@@ -89,7 +96,18 @@ export class PhotosessionsService {
       }
 
       async deletePhotosession(id: number): Promise<void> {
-        const result = await this.photosessionRepository.delete(id);
-        console.log(result);
+        const found = await this.photosessionRepository.findOne({
+          where: { id },
+          relations: {
+              photographer: true,
+              client: true
+          }
+      })
+
+      if (! found) {
+          throw new NotFoundException(`Photosession with ID = ${id} not found`); 
+        }
+      const result = await this.photosessionRepository.delete(id);
+      console.log(result);
       }
 }

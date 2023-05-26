@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PhotographerRepository } from './photographer.repository';
 import { IncompletePhotographerDto } from './dto/incomplete-photographer.dto';
 import { CreatePhotographerDto } from './dto/create-photographer.dto';
+import { PhotographerNotFoundException } from './exceptions/PhotographerNotFound.exception';
 
 @Injectable()
 export class PhotographersService {
@@ -19,7 +20,7 @@ export class PhotographersService {
         })
 
         if (! found) {
-            throw new NotFoundException(`Photographer with ID = ${id} not found`); 
+            throw new PhotographerNotFoundException(`Photographer with ID = ${id} not found`); 
           }
     
           return found;
@@ -31,7 +32,7 @@ export class PhotographersService {
         })
 
         if (! photographers) {
-            throw new NotFoundException(`Photographers are not found`); 
+            throw new PhotographerNotFoundException(); 
           }
     
           return photographers;
@@ -39,6 +40,9 @@ export class PhotographersService {
 
     async findIncompletePhotographers(): Promise<IncompletePhotographerDto[]> {
         const photographers = await this.photographerRepository.find();
+        if (! photographers) {
+          throw new PhotographerNotFoundException(); 
+        }
         const incompletePhotographersDto: IncompletePhotographerDto[] = photographers.map((photographer) => {
           const incompletePhotographerDto = new IncompletePhotographerDto();
           incompletePhotographerDto.firstname = photographer.firstname;
@@ -65,6 +69,9 @@ export class PhotographersService {
 
       async updatePhotographer(id: number, updatedPhotographer: Photographer): Promise<Photographer> {
         const photographer = await this.getPhotographerById(id);
+        if (! photographer) {
+          throw new PhotographerNotFoundException(); 
+        }
   
         photographer.firstname = updatedPhotographer.firstname;
         photographer.lastname = updatedPhotographer.lastname;
@@ -77,6 +84,10 @@ export class PhotographersService {
       }
 
       async deletePhotographer(id: number): Promise<void> {
+        const photographer = await this.getPhotographerById(id);
+        if (! photographer) {
+          throw new PhotographerNotFoundException(); 
+        }
         const result = await this.photographerRepository.delete(id);
         console.log(result);
       }
