@@ -19,7 +19,6 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    
     "typeorm": "typeorm-ts-node-commonjs",
     "makemigrations": "npm run typeorm migration:generate -- -d configurations/typeorm.config.ts src/migrations/auto",
     "migrate": "npm run typeorm migration:run -- -d configurations/typeorm.config.ts"
@@ -32,6 +31,7 @@
     "@nestjs/sequelize": "^9.0.2",
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/typeorm": "^9.0.1",
+    "class-validator": "^0.14.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "nestjs-form-data": "^1.8.7",
