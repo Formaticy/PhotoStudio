@@ -9,11 +9,11 @@ ExceptionFilter {
         const request = context.getRequest<Request>();
         const response = context.getResponse<Response>();
 
-        // response.send({
-        //     status: exception.getStatus(),
-        //     message: exception.getResponse(), //ВЫБИРАЕМ КАК БУДУТ ОТОБРАЖАТЬСЯ ВСЕ ИСКЛЮЧЕНИЯ (НИЖЕ ВТОРОЙ ВАРИАНТ)
-        // });
+        response.send(
+            // status: exception.getStatus(),
+            exception.getResponse(), //ВЫБИРАЕМ КАК БУДУТ ОТОБРАЖАТЬСЯ ВСЕ ИСКЛЮЧЕНИЯ (НИЖЕ ВТОРОЙ ВАРИАНТ)
+        );
 
-        response.sendStatus(exception.getStatus());
+        // response.sendStatus(exception.getStatus());
     }
 }

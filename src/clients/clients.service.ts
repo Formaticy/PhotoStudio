@@ -84,9 +84,13 @@ export class ClientsService {
     }
 
     async deleteClient(id: number): Promise<void> {
-      const client = await this.getClientById(id);
-      if (! client) {
-        throw new ClientNotFoundException(); 
+      const found = await this.clientRepository.findOne({
+        where: { id },
+        relations: { photosessions: true }
+      });
+
+      if (! found) {
+        throw new ClientNotFoundException(`Client with ID = ${id} not found`); 
       }
       const result = await this.clientRepository.delete(id);
       console.log(result);
